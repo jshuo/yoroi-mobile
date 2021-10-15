@@ -7,7 +7,6 @@ import {AppRegistry, Text} from 'react-native'
 import {Provider, useSelector} from 'react-redux'
 
 import {handleGeneralError, setupHooks} from './actions'
-// $FlowFixMe
 import App from './App'
 import {name as appName} from './app.json'
 import {CONFIG} from './config/config'
@@ -29,12 +28,10 @@ bluebird.config({
   https://github.com/facebook/react-native/issues/19490
   https://github.com/facebook/react-native/issues/17972
 */
-// @ts-ignore
 global.Promise = bluebird
 
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
-// @ts-ignore
 global.onunhandledrejection = (e) => handleGeneralError(e.message, e, intl)
 
 const AppWithProviders = () => {

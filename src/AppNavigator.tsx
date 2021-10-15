@@ -4,7 +4,8 @@ import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isEmpty} from 'lodash'
 import React from 'react'
-import {type IntlShape, defineMessages, useIntl} from 'react-intl'
+import type {IntlShape} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {showErrorDialog, signin} from './actions'
@@ -43,17 +44,18 @@ const messages = defineMessages({
   },
 })
 
+// prettier-ignore
 type AppNavigatorRoutes = {
-  maintenance: any,
-  'screens-index': any,
-  storybook: any,
-  'new-wallet': any,
-  'app-root': any,
-  'custom-pin-auth': any,
-  'bio-auth': any,
+  maintenance: any;
+  'screens-index': any;
+  storybook: any;
+  'new-wallet': any;
+  'app-root': any;
+  'custom-pin-auth': any;
+  'bio-auth': any;
 }
 
-const Stack = createStackNavigator<any, AppNavigatorRoutes, any>()
+const Stack = createStackNavigator<AppNavigatorRoutes>()
 
 const NavigatorSwitch = () => {
   const intl = useIntl()
