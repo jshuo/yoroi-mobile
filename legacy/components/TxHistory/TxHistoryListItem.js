@@ -1,13 +1,13 @@
 // @flow
 
+import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
 import React, {Component} from 'react'
 import type {MessageDescriptor} from 'react-intl'
-import {type IntlShape, defineMessages, injectIntl} from 'react-intl'
+import {type IntlShape, defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity, View} from 'react-native'
-import {connect} from 'react-redux'
-import {compose} from 'redux'
+import {useSelector} from 'react-redux'
 
 import {MultiToken} from '../../crypto/MultiToken'
 import {TX_HISTORY_ROUTES} from '../../RoutesList'
@@ -129,7 +129,7 @@ type Props = {
 }
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
 class TxHistoryListItem extends Component<Props> {
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: Props) {
     // Note: technically we should also verify
     // submittedAt, fee and amount but
     // - submittedAt and fee should be invariant if other conditions are met
@@ -192,41 +192,45 @@ class TxHistoryListItem extends Component<Props> {
           <View style={styles.iconContainer}>
             <TxIcon transaction={transaction} />
           </View>
+
           <View style={styles.txContainer}>
             <View style={styles.row}>
               <Text small secondary={isPending}>
                 {intl.formatMessage(DIRECTION_MESSAGES[transaction.direction])}
               </Text>
+
               {transaction.amount ? (
                 <View style={styles.amount}>
                   <Text style={amountStyle} secondary={isPending}>
                     {formatTokenInteger(amount, defaultAsset)}
                   </Text>
+
                   <Text small style={amountStyle} secondary={isPending}>
                     {formatTokenFractional(amount, defaultAsset)}
                   </Text>
+
                   <Text style={amountStyle}>{`${utfSymbols.NBSP}${assetSymbol}`}</Text>
                 </View>
               ) : (
                 <Text style={amountStyle}>- -</Text>
               )}
             </View>
+
             {totalAssets !== 0 && (
               <View style={styles.row}>
                 <Text secondary small>
                   {formatTimeToSeconds(transaction.submittedAt)}
                 </Text>
-                <Text>
-                  {intl.formatMessage(messages.assets, {
-                    cnt: totalAssets,
-                  })}
-                </Text>
+
+                <Text>{intl.formatMessage(messages.assets, {cnt: totalAssets})}</Text>
               </View>
             )}
+
             <View style={styles.last}>
               <Text secondary small>
                 {!totalAssets && formatTimeToSeconds(transaction.submittedAt)}
               </Text>
+
               <Text secondary small style={styles.assuranceText}>
                 {intl.formatMessage(ASSURANCE_MESSAGES[transaction.assurance])}
               </Text>
@@ -238,14 +242,27 @@ class TxHistoryListItem extends Component<Props> {
   }
 }
 
-export default injectIntl(
-  compose(
-    connect((state, {id}) => ({
-      transaction: transactionsInfoSelector(state)[id],
-      availableAssets: availableAssetsSelector(state),
-      internalAddressIndex: internalAddressIndexSelector(state),
-      externalAddressIndex: externalAddressIndexSelector(state),
-      defaultNetworkAsset: defaultNetworkAssetSelector(state),
-    })),
-  )(TxHistoryListItem),
-)
+const Connector = (props: {id: string}) => {
+  const intl = useIntl()
+  const navigation = useNavigation()
+  const transaction = useSelector(transactionsInfoSelector)[props.id]
+  const availableAssets = useSelector(availableAssetsSelector)
+  const internalAddressIndex = useSelector(internalAddressIndexSelector)
+  const externalAddressIndex = useSelector(externalAddressIndexSelector)
+  const defaultNetworkAsset = useSelector(defaultNetworkAssetSelector)
+
+  return (
+    <TxHistoryListItem
+      {...props}
+      navigation={navigation}
+      intl={intl}
+      transaction={transaction}
+      availableAssets={availableAssets}
+      internalAddressIndex={internalAddressIndex}
+      externalAddressIndex={externalAddressIndex}
+      defaultNetworkAsset={defaultNetworkAsset}
+    />
+  )
+}
+
+export default Connector
