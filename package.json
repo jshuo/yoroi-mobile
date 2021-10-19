@@ -38,7 +38,7 @@
       "flow focus-check"
     ],
     "*.{ts,tsx}": [
-      "eslint --cache --fix --max-warnings=0",
+      "eslint --cache --fix --max-warnings=0 --c ./src/.eslintrc.js",
       "prettier --write",
       "bash -c tsc -p tsconfig.json --noEmit"
     ],
