@@ -29,7 +29,6 @@ DerivedData
 build/
 .idea
 .gradle
-local.properties
 *.iml
 
 # node.js
@@ -71,7 +70,7 @@ third-party
 
 # CocoaPods
 Pods/
-android/gradle.properties.local
+# android/gradle.properties.local
 android/app/google-services.json
 ios/emurgo/GoogleService-Info.plist
 HPC5*
@@ -88,10 +87,6 @@ translations/messages
 
 # Android bundle
 android/app/src/main/assets/index.android.bundle
-.env.production
-.env.staging
-.env.nightly
-.env.e2e
 .env.storybook
 sentry.properties
 app-mainnet-release.apk
